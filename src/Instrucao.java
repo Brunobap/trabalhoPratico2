@@ -127,7 +127,7 @@ public class Instrucao {
                 nIMM = entrada[3];
                 this.rd = util.intToBinaryString(Integer.parseInt(nRS),5);
                 this.rs = util.intToBinaryString(Integer.parseInt(nRT),5);
-                this.rt = util.intToBinaryString(Integer.parseInt(nIMM),16);
+                this.imm = util.intToBinaryString(Integer.parseInt(nIMM),16);
                 return 'I';
             case "beq":
                 this.op = "000100";
@@ -136,14 +136,23 @@ public class Instrucao {
                 nIMM = entrada[3];
                 this.rd = util.intToBinaryString(Integer.parseInt(nRS),5);
                 this.rs = util.intToBinaryString(Integer.parseInt(nRT),5);
-                this.rt = util.intToBinaryString(Integer.parseInt(nIMM),16);
+                this.imm = util.intToBinaryString(Integer.parseInt(nIMM),16);
                 return 'I';
 
             // TODO: bltz e bgtz
             case "bltz":
                 this.op = "000001";
+                nRS = entrada[1].substring(1, entrada[1].length()-1);
+                nIMM = entrada[2];
+                this.rs = util.intToBinaryString(Integer.parseInt(nRS), 5);
+                this.imm = util.intToBinaryString(Integer.parseInt(nIMM), 16);
+                return 'I';
             case "bgtz":
                 this.op = "000111";
+                nRS = entrada[1].substring(1, entrada[1].length()-1);
+                nIMM = entrada[2];
+                this.rs = util.intToBinaryString(Integer.parseInt(nRS), 5);
+                this.imm = util.intToBinaryString(Integer.parseInt(nIMM), 16);
                 return 'I';
             //#endregion
             //#region Tipo J
@@ -166,8 +175,7 @@ public class Instrucao {
                 return 'D';
             //#endregion
 
-            default:
-                return ' ';
+            default: return ' ';
         }
     }
 }
