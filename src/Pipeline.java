@@ -1,10 +1,13 @@
 import java.util.ArrayList;
 
 public class Pipeline {
+    // bruto - lista de entradas bruta, salva por precausão
+    private ArrayList<String> bruto;
+
     // IF - Contador de programas (PC);
     private int IF;
     // ID - Instrução em binário e endereços de operandos a serem lidos;
-    private ArrayList<Instrucao> ID;
+    private Instrucao ID;
     // EX - a operação sendo realizada juntamente com seus operandos;
     private Instrucao EX;
     // MEM  -  o  endereço  a  ser  lido  ou  escrito  na  memória,  assim  como  seu  valor para escrita;
@@ -12,12 +15,24 @@ public class Pipeline {
     // WB - o endereço a ser lido ou escrito no banco de registradores, assim como seu valor para escrita;
     private int WB;
 
+    // Memórias usadas pelo pipeline (1000 endereços)
+    private Memoria memoria;
+
     // Registradores gerais ($0 à $31)
     private ArrayList<Registrador> arrayRegGerais;
     // Registrador $lo e $hi (mult e divisão)
     private Registrador regLo, regHi;
 
-    //#region Getters e Setters
+    //#region Getters e Setters  
+    public Memoria getMemoria() {
+        return memoria;
+    }
+    public void setMemoria(Memoria memoria) {
+        this.memoria = memoria;
+    }  
+    public ArrayList<String> getBruto() {
+        return bruto;
+    }
     public ArrayList<Registrador> getArrayRegGerais() {
         return arrayRegGerais;
     }
@@ -60,20 +75,35 @@ public class Pipeline {
     public void setIF(int iF) {
         IF = iF;
     }
-    public ArrayList<Instrucao> getID() {
+    public Instrucao getID() {
         return ID;
     }
-    public void setID(ArrayList<Instrucao> iD) {
+    public void setID(Instrucao iD) {
         ID = iD;
     }
     //#endregion
     
     public Pipeline(ArrayList<String> entrada) {
-        this.IF = 0;
-        this.EX = new Instrucao(entrada.remove(0));
-        for (String s : entrada)
-            this.ID.add(new Instrucao(s));
+        this.bruto = entrada;
 
-        
+        this.IF = 0;
+        this.EX = new Instrucao(entrada.get(IF));
+        this.ID = new Instrucao(entrada.get(IF+1));
+
+        this.arrayRegGerais = new ArrayList<Registrador>();
+        for (int i=0; i<32; i++)
+            this.arrayRegGerais.add(new Registrador());
+
+        this.regHi = new Registrador();
+        this.regLo = new Registrador();
+
+        this.memoria = new Memoria();
+    }
+
+    public void executarEX() {
+        this.IF++;
+        this.EX = this.ID;
+        if (EX.getStrCmd().equals("noop")) IF = -1;
+        else this.ID = new Instrucao(this.getBruto().get(IF+1));
     }
 }

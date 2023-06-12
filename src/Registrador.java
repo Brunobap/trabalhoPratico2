@@ -1,7 +1,7 @@
 
 public class Registrador {
     private int dado;
-
+    
     public int getDado() {
         return dado;
     }

@@ -1,4 +1,3 @@
-
 public class util {    
     public static int[] intToBinary(int value, int size) {
         if (value > Math.pow(2, size) - 1) {
