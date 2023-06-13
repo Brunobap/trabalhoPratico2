@@ -30,9 +30,8 @@ public class operacoesMIPS {
     }
     //  - div (Divisão)
     public static void div(Registrador rs, Registrador rt, Registrador hi, Registrador lo) {
-        int multiplicacao = rs.getDado() * rt.getDado();
-        hi.setDado(multiplicacao);
-        lo.setDado(multiplicacao);
+        hi.setDado(rs.getDado() % rt.getDado());
+        lo.setDado((int)(rs.getDado() / rt.getDado()));
     }
     //  - bltz (Jump se o valor é negativo)
     public static int bltz (Registrador rs, int PC, int imm) {
@@ -59,7 +58,7 @@ public class operacoesMIPS {
         return target/4; 
     }
     //  - jr (Jump direto no valor do registrador)
-     public static int j (Registrador rs) {
+     public static int jr (Registrador rs) {
         return rs.getDado(); 
     }
 }

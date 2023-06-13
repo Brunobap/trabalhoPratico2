@@ -89,6 +89,8 @@ public class Pipeline {
         this.IF = 0;
         this.EX = new Instrucao(entrada.get(IF));
         this.ID = new Instrucao(entrada.get(IF+1));
+        this.WB = 0;
+        this.MEM = 0;
 
         this.arrayRegGerais = new ArrayList<Registrador>();
         for (int i=0; i<32; i++)
@@ -102,8 +104,108 @@ public class Pipeline {
 
     public void executarEX() {
         this.IF++;
-        this.EX = this.ID;
-        if (EX.getStrCmd().equals("noop")) IF = -1;
-        else this.ID = new Instrucao(this.getBruto().get(IF+1));
+        this.WB = 0;
+        this.MEM = 0;
+        switch (this.EX.getStrCmd()) {
+            case "add":
+                int rs = EX.getRs();
+                int rt = EX.getRt();
+                int rd = EX.getRd();
+                this.WB = rd;
+                operacoesMIPS.add(this.arrayRegGerais.get(rs), this.arrayRegGerais.get(rt), this.arrayRegGerais.get(rd));
+                break;
+            
+            case "sub":
+                rs = EX.getRs();
+                rt = EX.getRt();
+                rd = EX.getRd();
+                this.WB = rd;
+                operacoesMIPS.sub(this.arrayRegGerais.get(rs), this.arrayRegGerais.get(rt), this.arrayRegGerais.get(rd));
+                break;
+
+            case "mult":
+                rs = EX.getRs();
+                rt = EX.getRt();   
+                this.WB = 32;
+                operacoesMIPS.mult(this.arrayRegGerais.get(rs), this.arrayRegGerais.get(rt), regHi, regLo);
+                break;
+            
+            case "div":
+                rs = EX.getRs();
+                rt = EX.getRt();
+                this.WB = 33;   
+                operacoesMIPS.div(this.arrayRegGerais.get(rs), this.arrayRegGerais.get(rt), regHi, regLo);
+                break;
+            
+            case "beq":
+                rs = EX.getRs();
+                rt = EX.getRt();
+                int imm = EX.getImm();
+                operacoesMIPS.beq(this.arrayRegGerais.get(rs), this.arrayRegGerais.get(rt), this.IF, imm);
+                break;
+
+            case "bne":
+                rs = EX.getRs();
+                rt = EX.getRt();
+                imm = EX.getImm();
+                operacoesMIPS.bne(this.arrayRegGerais.get(rs), this.arrayRegGerais.get(rt), this.IF, imm);
+                break;
+                
+            case "bgtz":
+                rs = EX.getRs();
+                imm = EX.getImm();
+                operacoesMIPS.bgtz(this.arrayRegGerais.get(rs), this.IF, imm);  
+                break;
+
+            case "bltz":
+                rs = EX.getRs();
+                imm = EX.getImm();
+                operacoesMIPS.bltz(this.arrayRegGerais.get(rs), this.IF, imm);  
+                break;
+
+            case "j":
+                int target = EX.getTarget();
+                operacoesMIPS.j(target);
+                break;
+                
+            case "jr":
+                rs = EX.getRs();
+                operacoesMIPS.jr(this.arrayRegGerais.get(rs));
+                break;
+            
+            case "lw":
+                rt = EX.getRt();
+                rs = EX.getRs();
+                imm = EX.getImm();
+                this.WB = rt;
+                this.MEM = imm + rs;
+                operacoesMIPS.lw(this.arrayRegGerais.get(rt), memoria, this.arrayRegGerais.get(rs), imm);
+                break;
+
+            case "sw":
+                rt = EX.getRt();
+                rs = EX.getRs();
+                imm = EX.getImm();
+                this.WB = rt;
+                this.MEM = imm + rs;
+                operacoesMIPS.st(this.arrayRegGerais.get(rt), memoria, this.arrayRegGerais.get(rs), imm);
+                break;
+                
+            case "get_tc":
+                target = EX.getTarget();
+                this.MEM = target;
+                operacoesBinarias.get_tc(memoria, target);
+                break;
+        
+
+            default:
+                operacoesBinarias.noop();
+                break;
+        }
+        
+        if (IF != -1) {
+            this.EX = this.ID;
+            this.ID = new Instrucao(this.getBruto().get(IF+1));
+        }
     }
 }

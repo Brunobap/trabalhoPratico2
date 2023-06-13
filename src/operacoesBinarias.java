@@ -1,12 +1,14 @@
-
+import java.util.Scanner;
 
 public class operacoesBinarias {
     // Operações implemementadas:
     //  - get_tc M(y) (salva em M(y) o valor inteiro digitado no teclado)
-
+    public static void get_tc (Memoria mem, int target) {
+        // TODO: Implementar leitura de teclado
+    }
     //  - noop (finaliza a execução)
-    public void noop(Pipeline pipeline) {
-        pipeline.setIF(-1);
+    public static int noop () {
+        return -1;
     }
     
 }
