@@ -139,28 +139,28 @@ public class Pipeline {
             
             case "beq":
                 rs = EX.getRs();
-                rt = EX.getRt();
+                rd = EX.getRd();
                 int imm = EX.getImm();
-                operacoesMIPS.beq(this.arrayRegGerais.get(rs), this.arrayRegGerais.get(rt), this.IF, imm);
+                this.IF = operacoesMIPS.beq(this.arrayRegGerais.get(rs), this.arrayRegGerais.get(rd), this.IF, imm);
                 break;
 
             case "bne":
                 rs = EX.getRs();
-                rt = EX.getRt();
+                rd = EX.getRd();
                 imm = EX.getImm();
-                operacoesMIPS.bne(this.arrayRegGerais.get(rs), this.arrayRegGerais.get(rt), this.IF, imm);
+                this.IF = operacoesMIPS.bne(this.arrayRegGerais.get(rs), this.arrayRegGerais.get(rd), this.IF, imm);
                 break;
                 
             case "bgtz":
                 rs = EX.getRs();
                 imm = EX.getImm();
-                operacoesMIPS.bgtz(this.arrayRegGerais.get(rs), this.IF, imm);  
+                this.IF = operacoesMIPS.bgtz(this.arrayRegGerais.get(rs), this.IF, imm);  
                 break;
 
             case "bltz":
                 rs = EX.getRs();
                 imm = EX.getImm();
-                operacoesMIPS.bltz(this.arrayRegGerais.get(rs), this.IF, imm);  
+                this.IF = operacoesMIPS.bltz(this.arrayRegGerais.get(rs), this.IF, imm);  
                 break;
 
             case "j":
@@ -199,13 +199,13 @@ public class Pipeline {
         
 
             default:
-                operacoesBinarias.noop();
+                this.IF = operacoesBinarias.noop();
                 break;
         }
         
         if (IF != -1) {
-            this.EX = this.ID;
-            this.ID = new Instrucao(this.getBruto().get(IF+1));
+            this.EX = new Instrucao(this.getBruto().get(IF));
+            if (! EX.getStrCmd().equals("noop")) this.ID = new Instrucao(this.getBruto().get(IF+1));
         }
     }
 }

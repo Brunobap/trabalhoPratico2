@@ -63,6 +63,8 @@ public class Instrucao {
             this.bin = util.intToBinaryString(op, 6) + util.intToBinaryString(rs, 5) + util.intToBinaryString(rt, 5) + util.intToBinaryString(imm, 16);
         } else if (tipo == 'J') {
             this.bin = util.intToBinaryString(op, 6) + util.intToBinaryString(target, 26);
+        } else {
+            this.bin = util.intToBinaryString(op, 6) + util.intToBinaryString(target, 26);
         }
     }
     
@@ -156,22 +158,22 @@ public class Instrucao {
             case "bne":
                 this.op = 5;
                 nRS = entrada[1].substring(1, entrada[1].length()-1);
-                nRT = entrada[2].substring(1, entrada[2].length()-1);
+                nRD = entrada[2].substring(1, entrada[2].length()-1);
                 nIMM = entrada[3];
 
-                this.rd = Integer.parseInt(nRS);
-                this.rs = Integer.parseInt(nRT);
+                this.rd = Integer.parseInt(nRD);
+                this.rs = Integer.parseInt(nRS);
                 this.imm = Integer.parseInt(nIMM);
                 return 'I';
 
             case "beq":
                 nRS = entrada[1].substring(1, entrada[1].length()-1);
-                nRT = entrada[2].substring(1, entrada[2].length()-1);
+                nRD = entrada[2].substring(1, entrada[2].length()-1);
                 nIMM = entrada[3];
                 
                 this.op = 4;
                 this.rd = Integer.parseInt(nRS);
-                this.rs = Integer.parseInt(nRT);
+                this.rs = Integer.parseInt(nRD);
                 this.imm = Integer.parseInt(nIMM);
                 return 'I';
 
